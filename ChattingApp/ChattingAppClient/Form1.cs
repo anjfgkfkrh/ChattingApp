@@ -57,23 +57,57 @@ public partial class Form1 : Form
             _ => isMine ? hub.Message : $"{hub.UserName}: {hub.Message}"
         };
 
+        AddMessage(message, isMine, hub.GetImage());
+    }
+
+    private void AddMessage(string message, bool isMine, Image? image)
+    {
         Panel panel = new Panel();
         panel.Width = 455;
         panel.Anchor = AnchorStyles.Top;
         panel.AutoScroll = false;
 
+
         Label label = new Label();
-        label.Text = message;
-        label.AutoSize = true;
-        label.MaximumSize = new Size(400, 0);
-        label.TextAlign = isMine ? ContentAlignment.TopRight : ContentAlignment.TopLeft;
-        label.BorderStyle = BorderStyle.FixedSingle;
+        if (image != null)
+        {
+            label.Image = image.Width > 400 ? ResizeImage(image, 400) : image;
+            label.Height = image.Height;
+            label.Width = image.Width;
+            label.TextAlign = ContentAlignment.BottomCenter;
+            label.ImageAlign = ContentAlignment.TopCenter;
+        }
+        else
+        {
+            label.Text = message;
+            label.TextAlign = isMine ? ContentAlignment.TopRight : ContentAlignment.TopLeft;
+            label.AutoSize = true;
+            label.MaximumSize = new Size(400, 0);
+        }
+
         label.Dock = isMine ? DockStyle.Right : DockStyle.Left;
 
-        panel.Controls.Add(label);
         panel.Height = label.Height;
+        panel.Controls.Add(label);
+        panel.Height = label.Height + 10;
 
         flpMsg.Controls.Add(panel);
+    }
+
+    Image ResizeImage(Image imgToResize, int maxWidth)
+    {
+        float ratio = (float)maxWidth / imgToResize.Width;
+        int newWidth = maxWidth;
+        int newHeight = (int)(imgToResize.Height * ratio);
+
+        Bitmap newImage = new Bitmap(newWidth, newHeight);
+        using (Graphics g = Graphics.FromImage(newImage))
+        {
+            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            g.DrawImage(imgToResize, 0, 0, newWidth, newHeight);
+        }
+
+        return newImage;
     }
 
     private void Send()
