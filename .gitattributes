@@ -1,0 +1,2 @@
+ChattingAppServer.exe filter=lfs diff=lfs merge=lfs -text
+ChattingAppClient.exe filter=lfs diff=lfs merge=lfs -text
