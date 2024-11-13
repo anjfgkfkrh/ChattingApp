@@ -32,7 +32,7 @@ namespace ChatLib.Sockets
         public override event EventHandler<ChatEventArgs>? Received;
 
         public ChatClient(IPAddress iPAddress, int port) : base(iPAddress, port)
-        {
+        {  
         }
 
         public async Task ConnectAsync(ConnectionDetails details)

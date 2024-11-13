@@ -10,4 +10,8 @@
         <RootNamespace>ChattingAppClinet</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\ChatLib\ChatLib.csproj" />
+    </ItemGroup>
+
 </Project>

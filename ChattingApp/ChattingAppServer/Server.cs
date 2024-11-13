@@ -1,4 +1,8 @@
-﻿using System.Net;
+﻿using ChatLib.Events;
+using ChatLib.Handlers;
+using ChatLib.Models;
+using ChatLib.Sockets;
+using System.Net;
 using System.Net.Sockets;
 using System.Numerics;
 using System.Text;
@@ -7,66 +11,80 @@ namespace ChattingAppServer;
 
 public class Server
 {
-    TcpListener listener;
-    IPEndPoint ipEndPoint;
-    List<TcpClient> clients;
+    private ChatServer _server;
+    private ClientRoomManager _roomManager;
+
+    private ChatHub CreateNewStateChatHub(ChatHub hub, ChatState state)
+    {
+        return new ChatHub
+        {
+            RoomId = hub.RoomId,
+            UserName = hub.UserName,
+            State = state,
+        };
+    }
+
+    private void AddClientMessageList(ChatHub hub)
+    {
+        string message = hub.State switch
+        {
+            ChatState.Connect => $"서버에 연결되었습니다 {hub} ",
+            ChatState.Disconnect => $"서버 연결이 해제되었습니다 {hub} ",
+            _ => $"{hub}: {hub.Message}"
+        };
+        Console.WriteLine(message);
+    }
+
+    private void Connected(object? sender, ChatEventArgs e)
+    {
+        var hub = CreateNewStateChatHub(e.Hub, ChatState.Connect);
+
+        _roomManager.Add(e.ClientHandler);
+        _roomManager.SendToMyRoom(hub);
+
+        Console.WriteLine(e.Hub);
+        AddClientMessageList(hub);
+    }
+
+    private void Disconnected(object? sender, ChatEventArgs e)
+    {
+        var hub = CreateNewStateChatHub(e.Hub, ChatState.Disconnect);
+
+        _roomManager.Remove(e.ClientHandler);
+        _roomManager.SendToMyRoom(hub);
+
+        Console.WriteLine(e.Hub);
+        AddClientMessageList(hub);
+    }
+
+    private void Received(object? sender, ChatEventArgs e)
+    {
+        _roomManager.SendToMyRoom(e.Hub);
+
+        AddClientMessageList(e.Hub);
+    }
+
+    private void RunningStateChanged(bool isRunning)
+    {
+
+    }
+
+    public async Task StartServer()
+    {
+        Console.WriteLine("서버 시작");
+        await _server.StartAsync();
+    }
 
     public Server()
     {
-        ipEndPoint = new IPEndPoint(IPAddress.Any, 8000);
-        listener = new TcpListener(ipEndPoint);
-    }
-
-    public async void Run()
-    {
-        listener.Start();
-        Console.WriteLine("Server Start");
-
-        while (true)
-        {
-            Console.WriteLine("Client Listen...");
-            TcpClient client = await listener.AcceptTcpClientAsync();
-            clients.Add(client);
-
-            _ = HandleClient(client);
-        }
-    }
-
-    private async Task HandleClient(TcpClient client)
-    {
-        Console.WriteLine("New Client Accept");
-        NetworkStream stream = client.GetStream();
-        _ = ReadData(stream);
-        _ = WriteData(stream);
-    }
-
-    private async Task ReadData(NetworkStream stream)
-    {
-        byte[] sizeBuffer = new byte[4];
-        int read;
-
-        while (true)
-        {
-            read = await stream.ReadAsync(sizeBuffer, 0, sizeBuffer.Length);
-            if (read == 0)
-                break;
-            Console.WriteLine($"{read} bytes");
-
-            int size = BitConverter.ToInt32(sizeBuffer, 0);
-            byte[] buffer = new byte[size];
-
-            read = await stream.ReadAsync(buffer, 0, buffer.Length);
-            if (read == 0)
-                break;
-            Console.WriteLine("read data");
-
-            string message = Encoding.UTF8.GetString(buffer,0,read);
-        }
-    }
-
-    private async Task WriteData(NetworkStream stream)
-    {
-
+        Console.WriteLine("서버 초기화 중..");
+        _roomManager = new ClientRoomManager();
+        _server = new ChatServer(IPAddress.Parse("127.0.0.1"), 8080);
+        _server.Connected += Connected;
+        _server.Disconnected += Disconnected;
+        _server.Received += Received;
+        _server.RunningStateChanged += RunningStateChanged;
+        Console.WriteLine("서버 초기화 완료");
     }
 
 

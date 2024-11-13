@@ -3,11 +3,12 @@ namespace ChattingAppServer;
 
 using System.Diagnostics;
 
-static class main
+static class Program
 {
     [STAThread]
-    static void Main()
+    static async Task Main()
     {
-        Console.WriteLine("Hello World!");
+        Server server = new Server();
+        await server.StartServer();
     }
 }

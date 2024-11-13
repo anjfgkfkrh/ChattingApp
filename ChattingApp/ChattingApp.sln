@@ -1,8 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChattingAppServer", "ChattingAppServer\ChattingAppServer.csproj", "{69BC9F25-FC1A-46AD-947A-1A4A5D92E19E}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35027.167
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChattingAppServer", "ChattingAppServer\ChattingAppServer.csproj", "{69BC9F25-FC1A-46AD-947A-1A4A5D92E19E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChattingAppClient", "ChattingAppClient\ChattingAppClient.csproj", "{3B1D2CA7-B1B4-42C4-89F7-4FCE6CA1F8B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChattingAppClient", "ChattingAppClient\ChattingAppClient.csproj", "{3B1D2CA7-B1B4-42C4-89F7-4FCE6CA1F8B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatLib", "ChatLib\ChatLib.csproj", "{22249E3E-A0FC-461C-94C6-C30F071E0921}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +23,15 @@ Global
 		{3B1D2CA7-B1B4-42C4-89F7-4FCE6CA1F8B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B1D2CA7-B1B4-42C4-89F7-4FCE6CA1F8B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B1D2CA7-B1B4-42C4-89F7-4FCE6CA1F8B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22249E3E-A0FC-461C-94C6-C30F071E0921}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22249E3E-A0FC-461C-94C6-C30F071E0921}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22249E3E-A0FC-461C-94C6-C30F071E0921}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22249E3E-A0FC-461C-94C6-C30F071E0921}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FEBD1124-60AC-402C-9523-0AC9AB7A66C5}
 	EndGlobalSection
 EndGlobal
